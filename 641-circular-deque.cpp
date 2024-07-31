@@ -4,12 +4,11 @@ using namespace std;
 class MyCircularDeque
 {
 private:
-    int front, rear;
-    int size;
+    int front, rear, size;
     int *deque;
 
 public:
-    MyCircularDeque(int k) : rear(-1), front(rear)
+    MyCircularDeque(int k) : rear(-1), front(-1)
     {
         deque = new int[k];
         size = k;
@@ -17,72 +16,77 @@ public:
 
     bool insertFront(int value)
     {
-        if (isFull() == true)
-        {
+        if (isFull()) {
             return false;
         }
 
-        else if (isEmpty() == true)
-        {
-            front++;
+        if (isEmpty()) {
+            front = rear = 0;
         }
 
-        rear = (rear + 1) % size;
-        deque[rear] = value;
+        else {
+            front = (front - 1 + size) % size;
+        }
+
+        deque[front] = value;
         return true;
     }
 
     bool insertLast(int value)
     {
-        if (isFull() == true) {
+        if (isFull()) {
             return false;
-        } 
-        
-        else if (isEmpty() == true) {
-            insertFront(value);
-            return true;
         }
 
-        front = (front - 1) % size;
-        deque[front] = value;
+        if (isEmpty()) {
+            front = rear = 0;
+        }
+        
+        else {
+            rear = (rear + 1) % size;
+        }
+
+        deque[rear] = value;
         return true;
     }
 
     bool deleteFront()
     {
-        if (isEmpty() == true) {
+        if (isEmpty()) {
             return false;
         }
 
         if (front == rear) {
-            front = -1;
-            rear = front;
-            return true;
+            front = rear = -1;
         }
 
-        front = (front + 1) % size;
+        else {
+            front = (front + 1) % size;
+        }
+
         return true;
     }
 
     bool deleteLast()
     {
-        if (isEmpty() == true) {
+        if (isEmpty()) {
             return false;
         }
 
-        if (rear == front) {
-            rear = -1;
-            front = rear;
-            return true;
+        if (front == rear) {
+            front = rear = -1;
         }
 
-        rear = (rear - 1) % size;
+        else {
+            rear = (rear - 1) % size;
+        }
+        
         return true;
     }
 
     int getFront()
     {
-        if (isEmpty() == true) {
+        if (isEmpty()) {
             return -1;
         }
 
@@ -91,7 +95,7 @@ public:
 
     int getRear()
     {
-        if (isEmpty() == true) {
+        if (isEmpty()) {
             return -1;
         }
 
@@ -100,28 +104,12 @@ public:
 
     bool isEmpty()
     {
-        if (front == -1 && rear == -1) {
-            return true;
-        }
-
-        return false;
+        return front == -1;
     }
 
     bool isFull()
     {
-        if (isEmpty() == true) {
-            return false;
-        }
-
-        if (rear == (size - 1) && front == 0) {
-            return true;
-        }
-
-        if ((rear - front) == -1) {
-            return true;
-        }
-
-        return false;
+        return (rear + 1) % size == front;
     }
 };
 
